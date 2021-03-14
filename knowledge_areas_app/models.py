@@ -5,6 +5,7 @@ from users_app.models import Tutor, Student, Moderator
 # Create your models here.
 class KnowledgeArea(models.Model):
     name = models.CharField(max_length=64, verbose_name='Nombre')
+    level = models.IntegerField(default=0, verbose_name='Nivel')
     description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
 
     knowledge_area = models.ForeignKey('self', on_delete=models.CASCADE, verbose_name='Especialidad')
@@ -18,7 +19,7 @@ class KnowledgeArea(models.Model):
         verbose_name_plural = 'Areas de conocimientos'
 
     def __str__(self):
-        return "[{}] {}".format(self.id, self.name)
+        return "[{}] {} {}".format(self.id, self.level, self.name)
 
 
 class KnowledgeArea_Tutor(models.Model):
