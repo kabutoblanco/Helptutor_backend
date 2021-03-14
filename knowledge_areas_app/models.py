@@ -8,7 +8,7 @@ class KnowledgeArea(models.Model):
     level = models.IntegerField(default=0, verbose_name='Nivel')
     description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
 
-    knowledge_area = models.ForeignKey('self', on_delete=models.CASCADE, verbose_name='Especialidad')
+    knowledge_area = models.ManyToManyField('self', blank=True, verbose_name='Especialidades')
 
     is_active = models.BooleanField(verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
