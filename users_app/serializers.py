@@ -8,15 +8,11 @@ class TutorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tutor
-        fields = '__all__'
+        exclude = ['groups', 'user_permissions', ]
 
     def create(self, validated_data):
-        groups = validated_data.pop('groups')
-        user_permissions = validated_data.pop('user_permissions')
         instance = Tutor.objects.create(**validated_data)
-        instance.set_password(validate_data.get('password'))
-        instance.user_permissions.set(user_permissions)
-        instance.groups.set(groups)
+        instance.set_password(validated_data.get('password'))
         instance.save()
         return instance
 
