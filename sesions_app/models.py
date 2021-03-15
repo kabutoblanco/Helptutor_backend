@@ -10,7 +10,7 @@ class Sesion(models.Model):
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, verbose_name='Contrato')
     time_slot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE, verbose_name='Franja')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -27,7 +27,7 @@ class Classroom(models.Model):
 
     sesion = models.ForeignKey(Sesion, on_delete=models.CASCADE, verbose_name='Sesión')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -44,7 +44,7 @@ class Chat(models.Model):
 
     sesion = models.ForeignKey(Sesion, on_delete=models.CASCADE, verbose_name='Sesión')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -62,7 +62,7 @@ class Qualification(models.Model):
 
     sesion = models.ForeignKey(Sesion, on_delete=models.CASCADE, verbose_name='Sesión')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 

@@ -13,7 +13,7 @@ class Payment(models.Model):
     
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, verbose_name='Contrato')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 

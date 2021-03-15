@@ -9,7 +9,7 @@ class Advertisement(models.Model):
 
     student = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name='Estudiante')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -27,7 +27,7 @@ class Answer(models.Model):
     advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE, verbose_name='Anuncio')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Usuario')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 

@@ -10,7 +10,7 @@ class KnowledgeArea(models.Model):
 
     knowledge_area = models.ManyToManyField('self', blank=True, verbose_name='Especialidades')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -26,7 +26,7 @@ class KnowledgeArea_Tutor(models.Model):
     knowledge_area = models.ForeignKey(KnowledgeArea, on_delete=models.CASCADE, verbose_name='Área de conocimiento')
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, verbose_name='Tutor')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -42,7 +42,7 @@ class KnowledgeArea_Student(models.Model):
     knowledge_area = models.ForeignKey(KnowledgeArea, on_delete=models.CASCADE, verbose_name='Área de conocimiento')
     student = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name='Estudiante')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -65,7 +65,7 @@ class Cerficate(models.Model):
     knowledge_area_tutor = models.ForeignKey(KnowledgeArea_Tutor, on_delete=models.CASCADE, verbose_name='Especialidad tutor')
     moderator = models.ForeignKey(Moderator, on_delete=models.CASCADE, verbose_name='Moderador')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -84,7 +84,7 @@ class Content(models.Model):
 
     knowledge_area_tutor = models.ForeignKey(KnowledgeArea_Tutor, on_delete=models.CASCADE, verbose_name='Especialidad tutor')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 

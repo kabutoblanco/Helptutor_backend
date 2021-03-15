@@ -6,7 +6,7 @@ from users_app.models import Tutor
 class Schedule(models.Model):
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, verbose_name='Tutor')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -28,7 +28,7 @@ class TimeSlot(models.Model):
 
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, verbose_name='Horario')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 

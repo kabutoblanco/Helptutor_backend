@@ -10,7 +10,7 @@ class Service(models.Model):
 
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, verbose_name='Tutor')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -28,7 +28,7 @@ class Offer(models.Model):
 
     student = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name='Estudiante')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
@@ -46,7 +46,7 @@ class Contract(models.Model):
     price = models.FloatField(default=0, verbose_name='Precio')
     description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
 
-    is_active = models.BooleanField(verbose_name='¿Es activo?')
+    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
     date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
 
