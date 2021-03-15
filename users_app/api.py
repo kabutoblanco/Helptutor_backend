@@ -30,14 +30,14 @@ class TutorGoogleViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         token = request.data['id_token']
         CLIENT_ID = "581408483289-vlrheiceitim0evek4mrjnakqm5v07m7.apps.googleusercontent.com"
-        try:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-            userid = idinfo['sub']
-            request.data['password'] = get_random_string(8)
-            request.data['username'] = idinfo['email'].split('@')[0] + idinfo['hd'].split('.')[0]
-            request.data['first_name'] = idinfo['given_name']
-            request.data['last_name'] = idinfo['family_name']
-            request.data['email'] = idinfo['email']        
-        except ValueError:
-            raise CustomException('No se registro tutor', 'detail', status.HTTP_400_BAD_REQUEST)
+        # try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        userid = idinfo['sub']
+        request.data['password'] = get_random_string(8)
+        request.data['username'] = idinfo['email'].split('@')[0] + idinfo['hd'].split('.')[0]
+        request.data['first_name'] = idinfo['given_name']
+        request.data['last_name'] = idinfo['family_name']
+        request.data['email'] = idinfo['email']        
+        # except ValueError:
+        #     raise CustomException('No se registro tutor', 'detail', status.HTTP_400_BAD_REQUEST)
         return super().create(request, *args, **kwargs)
