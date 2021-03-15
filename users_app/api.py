@@ -1,4 +1,5 @@
 from rest_framework import generics, status, viewsets
+from django.views.decorators.csrf import csrf_exempt
 
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -26,6 +27,7 @@ class TutorGoogleViewSet(viewsets.ModelViewSet):
     serializer_class = TutorSerializer
     queryset = Tutor.objects.all()
 
+    @csrf_exempt
     def create(self, request, *args, **kwargs):
         token = request.data['id_token']
         CLIENT_ID = "581408483289-vlrheiceitim0evek4mrjnakqm5v07m7.apps.googleusercontent.com"
