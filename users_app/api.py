@@ -24,7 +24,6 @@ class TutorViewSet(viewsets.ModelViewSet):
 
 class TutorGoogleViewSet(viewsets.ModelViewSet):
 
-    authentication_classes = (BasicAuthentication, )
     serializer_class = TutorSerializer
     queryset = Tutor.objects.all()
 
