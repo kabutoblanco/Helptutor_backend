@@ -36,7 +36,7 @@ class TutorGoogleViewSet(viewsets.ModelViewSet):
             request.data['username'] = idinfo['email'].split('@')[0] + idinfo['hd'].split('.')[0]
             request.data['first_name'] = idinfo['given_name']
             request.data['last_name'] = idinfo['family_name']
-            request.data['email'] = idinfo['email']
-            return super().create(request, *args, **kwargs)
+            request.data['email'] = idinfo['email']        
         except ValueError:
             raise CustomException('No se registro tutor', 'detail', status.HTTP_400_BAD_REQUEST)
+        return super().create(request, *args, **kwargs)
