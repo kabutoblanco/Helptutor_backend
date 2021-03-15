@@ -1,9 +1,10 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics, status, viewsets
 
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
 from utils.string_random import get_random_string
+from utils.exception import CustomException
 
 from users_app.serializers import TutorSerializer
 from users_app.models import Tutor
@@ -20,12 +21,16 @@ class TutorGoogleViewSet(viewsets.ModelViewSet):
     queryset = Tutor.objects.all()
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
-        object_google = request.data['object_google']
-        request.data['password'] = get_random_string(8)
-        request.data['username'] = object_google['profileObj']['email'].split('@')[0]
-        request.data['first_name'] = object_google['profileObj']['givenName']
-        request.data['last_name'] = object_google['profileObj']['familyName']
-        request.data['email'] = object_google['profileObj']['email']
-        request.data['telephone'] = '123'
-        return super().create(request, *args, **kwargs)
+        token = request.data['id_token']
+        CLIENT_ID = "581408483289-vlrheiceitim0evek4mrjnakqm5v07m7.apps.googleusercontent.com"
+        try:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+            userid = idinfo['sub']
+            request.data['password'] = get_random_string(8)
+            request.data['username'] = idinfo['email'].split('@')[0] + idinfo['hd'].split('.')[0]
+            request.data['first_name'] = idinfo['given_name']
+            request.data['last_name'] = idinfo['family_name']
+            request.data['email'] = idinfo['email']
+            return super().create(request, *args, **kwargs)
+        except ValueError:
+            raise CustomException('No se registro tutor', 'detail', status.HTTP_400_BAD_REQUEST)
