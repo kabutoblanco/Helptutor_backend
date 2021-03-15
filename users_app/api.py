@@ -14,6 +14,12 @@ class TutorViewSet(viewsets.ModelViewSet):
     serializer_class = TutorSerializer
     queryset = Tutor.objects.all()
 
+    def create(self, request, *args, **kwargs):
+        email = request.data['email']
+        hd = request.data['email'].split('@')[1]
+        request.data['username'] = email.split('@')[0] + hd.split('.')[0]
+        return super().create(request, *args, **kwargs)
+
 
 class TutorGoogleViewSet(viewsets.ModelViewSet):
 
