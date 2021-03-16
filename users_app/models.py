@@ -9,9 +9,10 @@ GENDER_CHOICES = ((0, _("MUJER")), (1, _("HOMBRE")), (2, _("NA")))
 
 class User(AbstractUser):
     email = models.EmailField(max_length=254, unique=True, verbose_name='Correo')
-    photo = models.FileField(upload_to='profiles/photos', null=True, verbose_name='Foto')
+    photo = models.FileField(upload_to='profiles/photos', null=True, default='', verbose_name='Foto')
     telephone = models.CharField(max_length=64, blank=True, verbose_name='Telefono')
-    gender = models.IntegerField(default=0, choices=GENDER_CHOICES, verbose_name='Genero')
+    gender = models.IntegerField(default=2, choices=GENDER_CHOICES, verbose_name='Genero')
+    birthday = models.DateField(null=True, blank=True, verbose_name='Cumpleaños')
     is_verified = models.BooleanField(default=False, verbose_name='¿Es verificado?')
     is_completed = models.BooleanField(default=False, verbose_name='¿Es completo?')
     description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
@@ -22,12 +23,30 @@ class User(AbstractUser):
     university = models.ForeignKey(University, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Universidad')
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Ciudad')
 
+    def is_tutor(self, *args, **kwargs):
+        try:
+            tutor = Tutor.objects.get(user=self)
+            if tutor:
+                return True
+        except Tutor.DoesNotExist:
+            return False
+
+    def is_student(self, *args, **kwargs):
+        pass
+
+    def is_moderator(self, *args, **kwargs):
+        pass
+
     class Meta:
         verbose_name = 'Usuario'
         verbose_name_plural = 'Usuarios'
 
+    def __str__(self):
+        return "[{}] {}".format(self.id, self.email)
 
-class Tutor(User):
+
+class Tutor(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     score = models.IntegerField(default=0, verbose_name='Puntuación')
     methodology = models.CharField(max_length=120, blank=True, verbose_name='Metodología')
     trajectory = models.CharField(max_length=120, blank=True, verbose_name='Trajectoria')
@@ -38,16 +57,27 @@ class Tutor(User):
         verbose_name = 'Tutor'
         verbose_name_plural = 'Tutores'
 
+    def __str__(self):
+        return "[{}] {}".format(self.id, self.user)
 
-class Student(User):
+
+class Student(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Estudiante'
         verbose_name_plural = 'Estudiantes'
+    
+    def __str__(self):
+        return "[{}] {}".format(self.id, self.user)
 
 
-class Moderator(User):
+class Moderator(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Moderador'
         verbose_name_plural = 'Moderadores'
+
+    def __str__(self):
+        return "[{}] {}".format(self.id, self.user)

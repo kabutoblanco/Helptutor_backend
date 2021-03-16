@@ -10,7 +10,7 @@ class Admin(BaseUserAdmin):
         (None, {"fields": ("username", "email", "password")}),
         (
             _("Personal info"),
-            {"fields": ("photo", "telephone", "gender", "is_verified", "description", )},
+            {"fields": ("photo", "telephone", "gender", "birthday", "is_verified", "description", )},
         ),
         (
             _("Permissions"),
@@ -47,6 +47,6 @@ class Admin(BaseUserAdmin):
     ordering = ("username",)
 
 admin.site.register(User, Admin, )
-admin.site.register(Tutor, Admin, )
-admin.site.register(Student, Admin, )
-admin.site.register(Moderator, Admin, )
+admin.site.register(Tutor, )
+admin.site.register(Student, )
+admin.site.register(Moderator, )
