@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     'corsheaders',    
 ]
 
+
+
 # REDEFINICIÓN DE LOS TOKENS CON KNOX
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["knox.auth.TokenAuthentication"]
