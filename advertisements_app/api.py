@@ -16,4 +16,4 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
 class AnswerViewSet(viewsets.ModelViewSet):
 
     queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
+    serializer_class = AnswerSerializer 
