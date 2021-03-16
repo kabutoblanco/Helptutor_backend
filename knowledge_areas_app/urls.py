@@ -6,11 +6,11 @@ from rest_framework.routers import DefaultRouter
 from .api import *
 
 router = DefaultRouter()
-router.register('KnowledgeArea', KnowledgeAreaViewSet)
-router.register('KnowledgeArea_Tutor', KnowledgeArea_TutorViewSet)
-router.register('KnowledgeArea_Student', KnowledgeArea_StudentViewSet)
-router.register('Cerficate', CerficateViewSet)
-router.register('Content', ContentViewSet)
+router.register('knowledgearea', KnowledgeAreaViewSet)
+router.register('knowledgearea_tutor', KnowledgeArea_TutorViewSet)
+router.register('knowledgeArea_student', KnowledgeArea_StudentViewSet)
+router.register('cerficate', CerficateViewSet)
+router.register('content', ContentViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
