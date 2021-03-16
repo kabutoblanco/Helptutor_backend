@@ -2,17 +2,24 @@ from rest_framework import generics, viewsets
 from .serializers import CountrySerializer, StateSerializer, CitySerializer, UniversitySerializer
 from .models import Country, State, City, University
 from rest_framework.response import Response
+from rest_framework import status
 
 
 class CountryViewSet(viewsets.ModelViewSet):
 
-    queryset = Country.objects.all()
+    queryset = Country.objects.filter(is_active = True)
     serializer_class = CountrySerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_active = False
+        self.perform_update(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class StateViewSet(viewsets.ModelViewSet):
 
-    queryset = State.objects.all()
+    queryset = State.objects.filter(is_active = True)
     serializer_class = StateSerializer
 
     def retrieve(self, request, pk=None):
@@ -20,10 +27,16 @@ class StateViewSet(viewsets.ModelViewSet):
         serializer = StateSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_active = False
+        self.perform_update(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class CityViewSet(viewsets.ModelViewSet):
 
-    queryset = City.objects.all()
+    queryset = City.objects.filter(is_active = True)
     serializer_class = CitySerializer
 
     def retrieve(self, request, pk=None):
@@ -31,13 +44,25 @@ class CityViewSet(viewsets.ModelViewSet):
         serializer = CitySerializer(queryset, many=True)
         return Response(serializer.data)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_active = False
+        self.perform_update(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class UniversityViewSet(viewsets.ModelViewSet):
 
-    queryset = University.objects.all()
+    queryset = University.objects.filter(is_active = True)
     serializer_class = UniversitySerializer
 
     def retrieve(self, request, pk=None):
         queryset = University.objects.filter(city = pk)
         serializer = UniversitySerializer(queryset, many=True)
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_active = False
+        self.perform_update(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
