@@ -14,7 +14,18 @@ class CountryViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.is_active = False
         self.perform_update(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
+
+
+class CountryStatesAPIView(generics.ListAPIView):
+
+    serializer_class = StateSerializer
+    queryset = State.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = State.objects.filter(country = kwargs['pk'])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class StateViewSet(viewsets.ModelViewSet):
@@ -22,16 +33,22 @@ class StateViewSet(viewsets.ModelViewSet):
     queryset = State.objects.filter(is_active = True)
     serializer_class = StateSerializer
 
-    def retrieve(self, request, pk=None):
-        queryset = State.objects.filter(country = pk)
-        serializer = StateSerializer(queryset, many=True)
-        return Response(serializer.data)
-
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
         self.perform_update(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
+
+    
+class StateCitiesAPIView(generics.ListAPIView):
+
+    serializer_class = CitySerializer
+    queryset = State.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = City.objects.filter(state = kwargs['pk'])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class CityViewSet(viewsets.ModelViewSet):
@@ -39,16 +56,22 @@ class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.filter(is_active = True)
     serializer_class = CitySerializer
 
-    def retrieve(self, request, pk=None):
-        queryset = City.objects.filter(state = pk)
-        serializer = CitySerializer(queryset, many=True)
-        return Response(serializer.data)
-
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
         self.perform_update(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
+
+    
+class CityUniversitiesAPIView(generics.ListAPIView):
+
+    serializer_class = UniversitySerializer
+    queryset = University.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = University.objects.filter(city = kwargs['pk'])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class UniversityViewSet(viewsets.ModelViewSet):
@@ -56,13 +79,8 @@ class UniversityViewSet(viewsets.ModelViewSet):
     queryset = University.objects.filter(is_active = True)
     serializer_class = UniversitySerializer
 
-    def retrieve(self, request, pk=None):
-        queryset = University.objects.filter(city = pk)
-        serializer = UniversitySerializer(queryset, many=True)
-        return Response(serializer.data)
-
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
         self.perform_update(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)

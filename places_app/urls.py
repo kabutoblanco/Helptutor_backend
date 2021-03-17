@@ -14,4 +14,7 @@ router.register('university', UniversityViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
+    path('api/country/<int:pk>/state/', CountryStatesAPIView.as_view()),
+    path('api/state/<int:pk>/city/', StateCitiesAPIView.as_view()),
+    path('api/city/<int:pk>/university/', CityUniversitiesAPIView.as_view())
 ]
