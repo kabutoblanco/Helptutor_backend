@@ -7,7 +7,7 @@ from .serializers import (
     KnowledgeArea_StudentSerializer,
     CerficateSerializer,
     ContentSerializer
-)
+) 
 from .models import (
     KnowledgeArea,
     KnowledgeArea_Tutor,
@@ -16,16 +16,31 @@ from .models import (
     Content,
 )
 
+from services_app.models import Service, Aggrement, Nomination
+ 
 class KnowledgeAreaViewSet(viewsets.ModelViewSet):
 
-    queryset = KnowledgeArea.objects.filter(is_active = True)
+    queryset = KnowledgeArea.objects.filter(is_active = True, level = 0)
     serializer_class = KnowledgeAreaSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
         self.perform_update(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status = status.HTTP_200_OK)
+
+class KnowledgeAreaCategoryAPIView(generics.ListAPIView):
+
+    serializer_class = KnowledgeAreaSerializer
+    queryset = KnowledgeArea.objects.filter(is_active = True, level = 1)
+
+    def list(self, request, *args, **kwargs):
+        queryset = KnowledgeArea.objects.filter(knowledge_area = kwargs['pk'], level = 1)
+        if queryset.exists():
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+        return Response({'detail':'No hay subcategorías registradas'},status = status.HTTP_400_BAD_REQUEST)
+        
 
 class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
 
@@ -35,8 +50,12 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
+        id_tutor = instance.tutor.id
+        Service.objects.filter(id = instance.id, tutor = id_tutor).update(is_active = False)
         self.perform_update(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if KnowledgeArea_Tutor.objects.filter(is_active = True, tutor = id_tutor).exists() == False:
+            Nomination.objects.filter(tutor = id_tutor).update(is_active = False)
+        return Response(status=status.HTTP_200_OK)
 
 class KnowledgeArea_StudentViewSet(viewsets.ModelViewSet):
 
@@ -47,7 +66,7 @@ class KnowledgeArea_StudentViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.is_active = False
         self.perform_update(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
 
 class CerficateViewSet(viewsets.ModelViewSet):
 
@@ -57,8 +76,15 @@ class CerficateViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
+        id_knowledge_area_tutor = instance.knowledge_area_tutor.id
         self.perform_update(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if Cerficate.objects.filter(is_active = True, knowledge_area_tutor = id_knowledge_area_tutor).exists() == False:
+            Service.objects.filter(knowledgeArea_Tutor = id_knowledge_area_tutor).update(is_active = False)
+            queryset_list = Service.objects.filter(knowledgeArea_Tutor = id_knowledge_area_tutor)
+            for id_k in queryset_list:
+                Aggrement.objects.filter(service = id_k.id).update(is_active = False)
+
+        return Response(status=status.HTTP_200_OK)
 
 class ContentViewSet(viewsets.ModelViewSet):
 
@@ -69,4 +95,4 @@ class ContentViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.is_active = False
         self.perform_update(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)

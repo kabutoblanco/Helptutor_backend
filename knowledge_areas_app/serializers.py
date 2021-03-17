@@ -19,7 +19,7 @@ class KnowledgeArea_TutorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = KnowledgeArea_Tutor
-        fields = '__all__'  
+        fields = '__all__'
 
 class KnowledgeArea_StudentSerializer(serializers.ModelSerializer):
 

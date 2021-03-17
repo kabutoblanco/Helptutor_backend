@@ -117,4 +117,3 @@ def update_tutor(request, *args, **kwargs):
     serializer.is_valid(raise_exception=True)
     tutor = serializer.save()
     return tutor
-

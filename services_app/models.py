@@ -1,6 +1,7 @@
 from django.db import models
 
 from users_app.models import Tutor, Student
+from knowledge_areas_app.models import KnowledgeArea_Tutor
 
 # Create your models here.
 class Service(models.Model):
@@ -9,6 +10,7 @@ class Service(models.Model):
     description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
 
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, verbose_name='Tutor')
+    knowledgeArea_Tutor = models.ForeignKey(KnowledgeArea_Tutor, on_delete=models.CASCADE, verbose_name='Area de conocimiento')
 
     is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')

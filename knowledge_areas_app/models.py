@@ -24,6 +24,7 @@ class KnowledgeArea(models.Model):
 
 class KnowledgeArea_Tutor(models.Model):
     knowledge_area = models.ForeignKey(KnowledgeArea, on_delete=models.CASCADE, verbose_name='Área de conocimiento')
+    description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, verbose_name='Tutor')
 
     is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
@@ -52,7 +53,7 @@ class KnowledgeArea_Student(models.Model):
 
     def __str__(self):
         return "[{}] {} {}".format(self.id, self.knowledge_area, self.student)
-
+ 
 
 class Cerficate(models.Model):
     name = models.CharField(max_length=64, verbose_name='Nombre')
