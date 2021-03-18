@@ -66,7 +66,7 @@ class TutorGoogleViewSet(viewsets.ModelViewSet):
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
             userid = idinfo['sub']
             request.data['password'] = get_random_string(8)
-            request.data['username'] = idinfo['email'].split('@')[0] + idinfo['hd'].split('.')[0]
+            request.data['username'] = idinfo['email'].split('@')[0] + idinfo['email'].split('@')[1].split('.')[0]
             request.data['first_name'] = idinfo['given_name']
             request.data['last_name'] = idinfo['family_name']
             request.data['email'] = idinfo['email']

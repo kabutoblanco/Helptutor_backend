@@ -22,12 +22,12 @@ class KnowledgeArea(models.Model):
         return "[{}] {} {}".format(self.id, self.level, self.name)
 
 
-class KnowledgeArea_Tutor(models.Model):
-    knowledge_area = models.ForeignKey(KnowledgeArea, on_delete=models.CASCADE, verbose_name='Área de conocimiento')
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, verbose_name='Tutor')
+class KnowledgeArea_Tutor(models.Model):    
     tags = models.CharField(max_length=120, blank=True, verbose_name="Tags")
     description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
-    
+
+    knowledge_area = models.ForeignKey(KnowledgeArea, on_delete=models.CASCADE, verbose_name='Área de conocimiento')
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, verbose_name='Tutor')
 
     is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
