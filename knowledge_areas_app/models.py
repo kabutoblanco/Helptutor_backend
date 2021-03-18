@@ -24,8 +24,10 @@ class KnowledgeArea(models.Model):
 
 class KnowledgeArea_Tutor(models.Model):
     knowledge_area = models.ForeignKey(KnowledgeArea, on_delete=models.CASCADE, verbose_name='Área de conocimiento')
-    description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, verbose_name='Tutor')
+    tags = models.CharField(max_length=120, blank=True, verbose_name="Tags")
+    description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
+    
 
     is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
