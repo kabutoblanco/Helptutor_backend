@@ -55,7 +55,7 @@ class KnowledgeArea_Student(models.Model):
         return "[{}] {} {}".format(self.id, self.knowledge_area, self.student)
  
 
-class Cerficate(models.Model):
+class Certificate(models.Model):
     name = models.CharField(max_length=64, verbose_name='Nombre')
     entity = models.CharField(max_length=64, verbose_name='Entidad')
     issue_year = models.DateField(max_length=64, verbose_name='Año de expedición')

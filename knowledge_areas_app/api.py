@@ -5,16 +5,17 @@ from .serializers import (
     KnowledgeAreaSerializer,
     KnowledgeArea_TutorSerializer,
     KnowledgeArea_StudentSerializer,
-    CerficateSerializer,
+    CertificateSerializer,
     ContentSerializer
 ) 
 from .models import (
     KnowledgeArea,
     KnowledgeArea_Tutor,
     KnowledgeArea_Student,
-    Cerficate,
+    Certificate,
     Content,
 )
+from users_app.models import Tutor
 
 from services_app.models import Service, Aggrement, Nomination
  
@@ -47,6 +48,16 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
     queryset = KnowledgeArea_Tutor.objects.filter(is_active = True)
     serializer_class = KnowledgeArea_TutorSerializer
 
+    def create(self, request, *args, **kwargs):
+        request.data['tutor'] = Tutor.objects.get(user=request.data.pop('user')).pk
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        knowledge_area_tutor = serializer.save()
+        return Response(
+            KnowledgeArea_TutorSerializer(
+                knowledge_area_tutor, context=self.get_serializer_context()).data,
+        )
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
@@ -68,17 +79,17 @@ class KnowledgeArea_StudentViewSet(viewsets.ModelViewSet):
         self.perform_update(instance)
         return Response(status=status.HTTP_200_OK)
 
-class CerficateViewSet(viewsets.ModelViewSet):
+class CertificateViewSet(viewsets.ModelViewSet):
 
-    queryset = Cerficate.objects.filter(is_active = True)
-    serializer_class = CerficateSerializer
+    queryset = Certificate.objects.filter(is_active = True)
+    serializer_class = CertificateSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
         id_knowledge_area_tutor = instance.knowledge_area_tutor.id
         self.perform_update(instance)
-        if Cerficate.objects.filter(is_active = True, knowledge_area_tutor = id_knowledge_area_tutor).exists() == False:
+        if Certificate.objects.filter(is_active = True, knowledge_area_tutor = id_knowledge_area_tutor).exists() == False:
             Service.objects.filter(knowledgeArea_Tutor = id_knowledge_area_tutor).update(is_active = False)
             queryset_list = Service.objects.filter(knowledgeArea_Tutor = id_knowledge_area_tutor)
             for id_k in queryset_list:

@@ -4,7 +4,7 @@ from .models import (
     KnowledgeArea,
     KnowledgeArea_Tutor,
     KnowledgeArea_Student,
-    Cerficate,
+    Certificate,
     Content,
 )
  
@@ -27,10 +27,10 @@ class KnowledgeArea_StudentSerializer(serializers.ModelSerializer):
         model = KnowledgeArea_Student
         fields = '__all__'  
 
-class CerficateSerializer(serializers.ModelSerializer):
+class CertificateSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Cerficate
+        model = Certificate
         fields = '__all__'  
 
 class ContentSerializer(serializers.ModelSerializer):
