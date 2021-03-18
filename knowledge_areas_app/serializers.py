@@ -38,3 +38,17 @@ class ContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
         fields = '__all__'  
+
+#complementarias views
+class KnowledgeAreaViewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = KnowledgeArea
+        fields = '__all__'
+
+class KnowledgeArea_TutorViewSerializer(serializers.ModelSerializer):
+    knowledge_area = KnowledgeAreaViewSerializer(read_only=True)
+
+    class Meta:
+        model = KnowledgeArea_Tutor
+        fields = '__all__'

@@ -1,13 +1,7 @@
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import (
-    KnowledgeAreaSerializer,
-    KnowledgeArea_TutorSerializer,
-    KnowledgeArea_StudentSerializer,
-    CertificateSerializer,
-    ContentSerializer
-) 
+from .serializers import * 
 from .models import (
     KnowledgeArea,
     KnowledgeArea_Tutor,
@@ -107,3 +101,18 @@ class ContentViewSet(viewsets.ModelViewSet):
         instance.is_active = False
         self.perform_update(instance)
         return Response(status=status.HTTP_200_OK)
+
+
+#complementarias
+
+class TutorSpecialitiesAPIList(generics.ListAPIView):
+
+    queryset = KnowledgeArea_Tutor.objects.all()
+    serializer_class = KnowledgeArea_TutorViewSerializer
+
+    def list(self, request, *args, **kwargs):
+        #pk: corresponde al id del tutor
+        queryset = KnowledgeArea_Tutor.objects.filter(tutor=kwargs['pk'])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+

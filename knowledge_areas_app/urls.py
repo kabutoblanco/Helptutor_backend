@@ -15,4 +15,5 @@ router.register('content', ContentViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
     path('api/knowledgearea/<int:pk>/speciality/', KnowledgeAreaCategoryAPIView.as_view()),
+    path('api/tutor/<int:pk>/speciality/', TutorSpecialitiesAPIList.as_view()),
 ]
