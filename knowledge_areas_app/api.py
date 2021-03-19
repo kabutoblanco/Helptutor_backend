@@ -52,8 +52,8 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
                 knowledge_area_tutor, context=self.get_serializer_context()).data,
         )
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
+    def destroy(self, request, pk=None):
+        instance = KnowledgeArea_Tutor.objects.get(pk=pk)
         instance.is_active = False
         id_tutor = instance.tutor.id
         Service.objects.filter(id = instance.id, tutor = id_tutor).update(is_active = False)
