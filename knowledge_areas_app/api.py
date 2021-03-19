@@ -57,7 +57,7 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
         instance.is_active = False
         id_tutor = instance.tutor.id
         Service.objects.filter(id = instance.id, tutor = id_tutor).update(is_active = False)
-        self.perform_update(instance)
+        instance.save()
         if KnowledgeArea_Tutor.objects.filter(is_active = True, tutor = id_tutor).exists() == False:
             Nomination.objects.filter(tutor = id_tutor).update(is_active = False)
         return Response(status=status.HTTP_200_OK)
