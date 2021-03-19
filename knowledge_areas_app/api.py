@@ -112,7 +112,7 @@ class TutorSpecialitiesAPIList(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         #pk: corresponde al id del tutor
-        queryset = KnowledgeArea_Tutor.objects.filter(tutor=kwargs['pk'])
+        queryset = KnowledgeArea_Tutor.objects.filter(tutor=kwargs['pk'], is_active=True)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status = status.HTTP_200_OK)
 
