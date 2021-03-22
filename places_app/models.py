@@ -19,7 +19,7 @@ class Country(models.Model):
 
 class State(models.Model):
     name = models.CharField(max_length=64, verbose_name='Nombre')
-    cod = models.CharField(max_length=2, verbose_name='Código')
+    cod = models.CharField(max_length=3, verbose_name='Código')
 
     country = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='País')
 

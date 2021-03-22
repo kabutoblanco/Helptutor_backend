@@ -1,10 +1,8 @@
 from rest_framework import generics, viewsets
-from .serializers import (
-    PaymentSerializer
-)
-from .models import (
-    Payment
-)
+
+from .models import *
+from .serializers import *
+
 
 class PaymentViewSet(viewsets.ModelViewSet):
 

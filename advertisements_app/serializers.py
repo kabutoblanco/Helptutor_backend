@@ -5,11 +5,13 @@ from .models import (
     Answer,
 )
 
+
 class AdvertisementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Advertisement
         fields = '__all__'
+
 
 class AnswerSerializer(serializers.ModelSerializer):
 

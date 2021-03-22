@@ -1,7 +1,7 @@
 from django.db import models
 
-from users_app.models import Tutor, Student
 from knowledge_areas_app.models import KnowledgeArea_Tutor
+from users_app.models import Tutor, Student
 
 # Create your models here.
 class Service(models.Model):

@@ -22,6 +22,7 @@ class Advertisement(models.Model):
 
 
 class Answer(models.Model):
+    likes = models.IntegerField(default=0, verbose_name='Me gusta')
     description = models.CharField(max_length=120, verbose_name='Descripción')
 
     advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE, verbose_name='Anuncio')

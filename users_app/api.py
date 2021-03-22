@@ -5,11 +5,11 @@ from rest_framework.response import Response
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
-from utils.string_random import get_random_string
 from utils.exception import CustomException
+from utils.string_random import get_random_string
 
-from users_app.serializers import UserSerializer, UserUpdateSerializer, TutorSerializer, TutorUpdateSerializer, TutorViewSerializer
-from users_app.models import User, Tutor
+from .models import User, Tutor
+from .serializers import *
 
 
 class TutorViewSet(viewsets.ModelViewSet):
@@ -25,8 +25,8 @@ class TutorViewSet(viewsets.ModelViewSet):
         return Response(
             TutorViewSerializer(
                 tutor, context=self.get_serializer_context()).data,
+            status=status.HTTP_201_CREATED
         )
-
     
     def partial_update(self, request, pk=None):
         tutor = update_tutor(request, TutorUpdateSerializer, **{'pk': pk})
@@ -35,19 +35,17 @@ class TutorViewSet(viewsets.ModelViewSet):
                 tutor, context=self.get_serializer_context()).data,
         )
 
-
     def list(self, request):
         return Response(
             TutorViewSerializer(
                 self.queryset, many=True).data,
         )
 
-
     def retrieve(self, request, pk=None):
         try:
             queryset = Tutor.objects.get(user=pk)
         except Tutor.DoesNotExist:
-            raise CustomException('No existe un registro con el correo', 'detail', status.HTTP_409_CONFLICT)
+            raise CustomException('Tutor no existe', 'detail', status.HTTP_409_CONFLICT)
         return Response(
             TutorViewSerializer(
                 queryset, context=self.get_serializer_context()).data,
@@ -72,10 +70,11 @@ class TutorGoogleViewSet(viewsets.ModelViewSet):
             request.data['email'] = idinfo['email']
             tutor = create_tutor(request, self.get_serializer_class())    
         except ValueError:
-            raise CustomException('Fallo la auth de GoogleAPI', 'detail', status.HTTP_409_CONFLICT)
+            raise CustomException('Error auth GoogleAPI', 'detail', status.HTTP_409_CONFLICT)
         return Response(
             TutorViewSerializer(
                 tutor, context=self.get_serializer_context()).data,
+            status=status.HTTP_201_CREATED
         )    
 
 
@@ -84,7 +83,7 @@ def create_tutor(request, *args, **kwargs):
     try:
         user = User.objects.get(email=request.data['email'])
         if user.is_tutor():
-            raise CustomException('Ya existe un tutor con el mismo correo', 'detail', status.HTTP_409_CONFLICT)
+            raise CustomException('Tutor duplicado', 'detail', status.HTTP_409_CONFLICT)
     #user
     except User.DoesNotExist:
         serializer = UserSerializer(data=request.data)
@@ -103,14 +102,14 @@ def update_tutor(request, *args, **kwargs):
     try:
         user = User.objects.get(pk=kwargs['pk'])
         if not user.is_tutor():
-            raise CustomException('No existe el tutor con el correo', 'detail', status.HTTP_409_CONFLICT)
+            raise CustomException('Tutor no existe', 'detail', status.HTTP_409_CONFLICT)
         else:
             serializer = UserUpdateSerializer(data=request.data, instance=user)
             serializer.is_valid(raise_exception=True)
             user = serializer.save()
     #user
     except User.DoesNotExist:
-        raise CustomException('No existe el usuario con el correo', 'detail', status.HTTP_409_CONFLICT)
+        raise CustomException('Usuario no existe', 'detail', status.HTTP_409_CONFLICT)
     #tutor
     tutor = Tutor.objects.get(user=user)
     serializer = args[0](data=request.data, instance=tutor)

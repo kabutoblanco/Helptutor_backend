@@ -1,17 +1,14 @@
 from rest_framework import generics, viewsets
-from .serializers import (
-    AdvertisementSerializer,
-    AnswerSerializer,
-)
-from .models import (
-    Advertisement,
-    Answer,
-)
+
+from .models import *
+from .serializers import *
+
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
 
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
+
 
 class AnswerViewSet(viewsets.ModelViewSet):
 
