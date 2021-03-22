@@ -36,7 +36,7 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         return Response(
-            KnowledgeArea_TutorSerializer(
+            KnowledgeArea_TutorViewSerializer(
                 instance, context=self.get_serializer_context()).data,
             status=status.HTTP_201_CREATED
         )
