@@ -43,6 +43,7 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
 
     def partial_update(self, request, pk=None, **kwargs):
         partial = kwargs.pop('partial', False)
+        request.data['tutor'] = Tutor.objects.get(user=request.data.pop('user')).pk
         instance = KnowledgeArea_Tutor.objects.get(pk=pk)
         serializer = self.get_serializer(data=request.data, instance=instance, partial=partial)
         serializer.is_valid(raise_exception=True)
