@@ -41,6 +41,17 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED
         )
 
+    def partial_update(self, request, pk=None):
+        instance = KnowledgeArea_Tutor.objects.get(pk=pk)
+        serializer = self.get_serializer(data=request.data, instance=instance)
+        serializer.is_valid(raise_exception=True)
+        isntance = serializer.save()
+        return Response(
+            KnowledgeArea_TutorViewSerializer(
+                instance, context=self.get_serializer_context()).data,
+            status=status.HTTP_200_OK
+        )
+
     def destroy(self, request, pk=None):
         instance = KnowledgeArea_Tutor.objects.get(pk=pk)
         instance.is_active = False
