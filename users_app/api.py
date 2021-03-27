@@ -37,6 +37,28 @@ class LoginAPI(generics.GenericAPIView):
         })
 
 
+class LoginGoogleAPI(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        token = request.data['id_token']
+        CLIENT_ID = "581408483289-vlrheiceitim0evek4mrjnakqm5v07m7.apps.googleusercontent.com"
+        try:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+            userid = idinfo['sub']
+            user = User.objects.get(email=idinfo['email'])
+        except ValueError:
+            raise CustomException('Error auth GoogleAPI', 'detail', status.HTTP_409_CONFLICT)
+        except User.DoesNotExist:
+            raise CustomException('Credenciales incorrectas', 'detail', status.HTTP_409_CONFLICT)
+        return Response({
+            "user":
+            UserSerializer(user, context=self.get_serializer_context()).data,
+            "token":
+            AuthToken.objects.create(user)[1]
+        })
+
+
 class TutorViewSet(viewsets.ModelViewSet):
 
     serializer_class = TutorSerializer
