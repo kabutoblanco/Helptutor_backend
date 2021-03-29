@@ -5,6 +5,7 @@ from helptutor.knowledge_areas.models import KnowledgeArea_Tutor
 from helptutor.knowledge_areas.serializers import KnowledgeArea_TutorSerializer, KnowledgeArea_TutorViewSerializer
 
 from helptutor.users.models import Tutor
+from helptutor.services.models import Service
 
 
 class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
