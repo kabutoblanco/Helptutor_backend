@@ -18,5 +18,5 @@ class KnowledgeAreaCategoryAPIView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = KnowledgeArea.objects.filter(knowledge_area=kwargs['pk'], level=1, is_active=True)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = self.get_serializer(queryset, many=True).data
+        return Response(data, status=status.HTTP_200_OK)

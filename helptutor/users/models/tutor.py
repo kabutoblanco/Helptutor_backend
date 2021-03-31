@@ -1,8 +1,17 @@
+"""Tutor model."""
+
+
+# Django
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-class Tutor(models.Model):    
+class Tutor(models.Model):
+    """Tutor model.
+    
+    A moderator is a person who certifies their 
+    knowledge to offer services and solve student doubts.
+    """  
     score = models.IntegerField(default=0, verbose_name='Puntuación')
     methodology = models.CharField(max_length=120, blank=True, verbose_name='Metodología')
     trajectory = models.CharField(max_length=120, blank=True, verbose_name='Trajectoria')

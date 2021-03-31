@@ -9,8 +9,8 @@ from knox import views as knox_views
 
 
 router = DefaultRouter()
-router.register('tutor', TutorViewSet)
-router.register('google/tutor', TutorGoogleViewSet)
+router.register('tutor', TutorViewSet, basename='tutor')
+router.register('google/tutor', TutorGoogleViewSet, basename='tutor-google')
 
 urlpatterns = [
     path('api/auth', include('knox.urls')),

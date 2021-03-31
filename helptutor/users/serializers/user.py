@@ -32,7 +32,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ('username', 'email', 'password', 'user_permissions', 'groups', )
+        exclude = ('username', 'email', 'user_permissions', 'groups', )
 
 
 class UserViewSerializer(serializers.ModelSerializer):

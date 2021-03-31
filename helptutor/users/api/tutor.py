@@ -1,56 +1,87 @@
-from rest_framework import generics, status, viewsets, permissions
+"""Tutor api."""
+
+
+# rest_framework
+from rest_framework import generics, status, viewsets, permissions, mixins
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
+# google services oauth
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
-from utils.exception import CustomException
-from utils.string_random import get_random_string
-
+# models
 from helptutor.users.models import User, Tutor
-from helptutor.users.serializers import *
 from knox.models import AuthToken
 
+# serializers
+from helptutor.users.serializers import *
 
-class TutorViewSet(viewsets.ModelViewSet):
+# permissions
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated
+)
+
+# utilities
+from utils.error import ValidationError
+from utils.string import get_random_string
+
+
+class TutorViewSet(mixins.CreateModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.RetrieveModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
+    """Tutor view set."""
 
     serializer_class = TutorSerializer
-    queryset = Tutor.objects.all()
+    queryset = Tutor.objects.filter(user__is_active=True)
 
-    def create(self, request, *args, **kwargs):
-        email = request.data['email']
-        hd = request.data['email'].split('@')[1]
-        request.data['username'] = email.split('@')[0] + hd.split('.')[0]
-        tutor = create_tutor(request, self.get_serializer_class())
-        return Response(
-            TutorViewSerializer(
-                tutor, context=self.get_serializer_context()).data,
-            status=status.HTTP_201_CREATED
-        )
-    
-    def partial_update(self, request, pk=None):
-        tutor = update_tutor(request, TutorUpdateSerializer, **{'pk': pk})
-        return Response(
-            TutorViewSerializer(
-                tutor, context=self.get_serializer_context()).data,
-        )
+    def get_permissions(self):
+        """Assign permissions based on action."""
+        if self.action in ['create']:
+            permissions = [AllowAny]
+        else:
+            permissions = [IsAuthenticated]
+        return [p() for p in permissions]
 
-    def list(self, request, *args, **kwargs):
+    def create(self, request):
+        user = get_or_create_user(request)
+        request.data['user'] = user.pk
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        tutor = serializer.save()
+        data = TutorViewSerializer(tutor).data
+        return Response(data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['patch'], url_path="self")
+    def self_update(self, request):
         self.serializer_class = TutorViewSerializer
-        return super().list(request, args, kwargs)
+        request.data['user'] = self.request.user.pk
+        update_user(request, request.user.pk)
+        return super().partial_update(request)
 
-    def retrieve(self, request, pk=None):
+    def list(self, request):
+        self.serializer_class = TutorViewSerializer
+        return super().list(request)
+
+    @self_update.mapping.get
+    def self_retrieve(self, request):
+        """Get tutor by pk to user."""
+        self.serializer_class = TutorViewSerializer
+        return super().retrieve(request)
+
+    def get_object(self):
         try:
-            queryset = Tutor.objects.get(user=pk)
-        except Tutor.DoesNotExist:
-            raise CustomException('Tutor no existe', 'detail', status.HTTP_409_CONFLICT)
-        return Response(
-            TutorViewSerializer(
-                queryset, context=self.get_serializer_context()).data,
-        )
+            return Tutor.objects.get(user=self.request.user.pk)
+        except:
+            raise ValidationError('Tutor no existe')
+        
 
-
-class TutorGoogleViewSet(viewsets.ModelViewSet):
+class TutorGoogleViewSet(mixins.CreateModelMixin,
+                         viewsets.GenericViewSet):
+    """TutorGoogle view set."""
 
     serializer_class = TutorSerializer
     queryset = Tutor.objects.all()
@@ -60,57 +91,48 @@ class TutorGoogleViewSet(viewsets.ModelViewSet):
         CLIENT_ID = "581408483289-vlrheiceitim0evek4mrjnakqm5v07m7.apps.googleusercontent.com"
         try:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-            userid = idinfo['sub']
-            request.data['password'] = get_random_string(8)
-            request.data['username'] = idinfo['email'].split('@')[0] + idinfo['email'].split('@')[1].split('.')[0]
-            request.data['first_name'] = idinfo['given_name']
-            request.data['last_name'] = idinfo['family_name']
-            request.data['email'] = idinfo['email']
-            tutor = create_tutor(request, self.get_serializer_class())    
+            request = get_information_google(request, idinfo)
+            user = get_or_create_user(request)
+            request.data['user'] = user.pk
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            tutor = serializer.save()
         except ValueError:
-            raise CustomException('Error auth GoogleAPI', 'detail', status.HTTP_409_CONFLICT)
-        return Response(
-            TutorViewSerializer(
-                tutor, context=self.get_serializer_context()).data,
-            status=status.HTTP_201_CREATED
-        )    
+            raise ValidationError('Error auth GoogleAPI')
+        data = TutorViewSerializer(tutor).data
+        return Response(data, status=status.HTTP_200_OK)
 
 
-def create_tutor(request, *args, **kwargs):
-    #validators
+def get_or_create_user(request, *args, **kwargs):
     try:
-        user = User.objects.get(email=request.data['email'])
-        if user.is_tutor():
-            raise CustomException('Tutor duplicado', 'detail', status.HTTP_409_CONFLICT)
-    #user
+        user = User.objects.get(email=request.data.get('email', None))
     except User.DoesNotExist:
+        email = request.data.get('email', None)
+        if email:
+            request.data['username'] = email
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-    request.data['user'] = user.pk
-    #tutor
-    serializer = args[0](data=request.data)
-    serializer.is_valid(raise_exception=True)
-    tutor = serializer.save()
-    return tutor
+    return user
 
 
-def update_tutor(request, *args, **kwargs):
-    #validators
+def update_user(request, pk, *args, **kwargs):
     try:
-        user = User.objects.get(pk=kwargs['pk'])
-        if not user.is_tutor():
-            raise CustomException('Tutor no existe', 'detail', status.HTTP_409_CONFLICT)
-        else:
-            serializer = UserUpdateSerializer(data=request.data, instance=user)
-            serializer.is_valid(raise_exception=True)
-            user = serializer.save()
-    #user
+        user = User.objects.get(pk=pk)
+        if request.data.get('password', None):
+            user.set_password(request.data.pop('password'))
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
     except User.DoesNotExist:
-        raise CustomException('Usuario no existe', 'detail', status.HTTP_409_CONFLICT)
-    #tutor
-    tutor = Tutor.objects.get(user=user)
-    serializer = args[0](data=request.data, instance=tutor)
-    serializer.is_valid(raise_exception=True)
-    tutor = serializer.save()
-    return tutor
+        pass
+
+
+def get_information_google(request, idinfo, *args, **kwargs):
+    userid = idinfo['sub']            
+    request.data['first_name'] = idinfo['given_name']
+    request.data['last_name'] = idinfo['family_name']
+    request.data['email'] = idinfo['email']
+    request.data['username'] = idinfo['email']
+    request.data['password'] = get_random_string(8)
+    return request

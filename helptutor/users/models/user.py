@@ -1,15 +1,22 @@
+"""User model."""
+
+
+# Django
 from django.contrib.auth.models import Permission, AbstractUser
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from utils.models import HelpTutorModel
-
+# models
 from .tutor import Tutor
 
-# Create your models here.
+# Utilities
+from utils.models import HelpTutorModel
+
+
 GENDER_CHOICES = ((0, _("MUJER")), (1, _("HOMBRE")), (2, _("NA")))
 
 class User(HelpTutorModel, AbstractUser):
+    """User model."""
     email = models.EmailField(max_length=254, unique=True, verbose_name='Correo')
     photo = models.FileField(upload_to='profiles/photos', null=True, default='', verbose_name='Foto')
     telephone = models.CharField(max_length=64, blank=True, verbose_name='Telefono')
@@ -33,25 +40,6 @@ class User(HelpTutorModel, AbstractUser):
             'Unselect this instead of deleting accounts.'
         ),
     )
-    
-
-    def is_tutor(self, *args, **kwargs):
-        try:
-            tutor = Tutor.objects.get(user=self)
-            if tutor:
-                return True
-        except Tutor.DoesNotExist:
-            return False
-
-    def is_student(self, *args, **kwargs):
-        pass
-
-    def is_moderator(self, *args, **kwargs):
-        pass
-
-    class Meta:
-        verbose_name = 'Usuario'
-        verbose_name_plural = 'Usuarios'
 
     def __str__(self):
         return "[{}] {}".format(self.id, self.email)

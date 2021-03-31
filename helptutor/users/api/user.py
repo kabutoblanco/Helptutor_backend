@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
-from utils.exception import CustomException
-from utils.string_random import get_random_string
+from utils.error import ValidationError
 
 from helptutor.users.models import User, Tutor
 from helptutor.users.serializers import *
@@ -35,7 +34,7 @@ class LoginAPI(generics.GenericAPIView):
         send_email()
         return Response({
             "user":
-            UserSerializer(user, context=self.get_serializer_context()).data,
+            UserViewSerializer(user, context=self.get_serializer_context()).data,
             "token":
             AuthToken.objects.create(user)[1]
         })
@@ -62,12 +61,12 @@ class LoginGoogleAPI(generics.GenericAPIView):
             userid = idinfo['sub']
             user = User.objects.get(email=idinfo['email'])
         except ValueError:
-            raise CustomException('Error auth GoogleAPI', 'detail', status.HTTP_409_CONFLICT)
+            raise ValidationError('Error auth GoogleAPI')
         except User.DoesNotExist:
-            raise CustomException('Credenciales incorrectas', 'detail', status.HTTP_409_CONFLICT)
+            raise ValidationError('Credenciales incorrectas')
         return Response({
             "user":
-            UserSerializer(user, context=self.get_serializer_context()).data,
+            UserViewSerializer(user, context=self.get_serializer_context()).data,
             "token":
             AuthToken.objects.create(user)[1]
         })

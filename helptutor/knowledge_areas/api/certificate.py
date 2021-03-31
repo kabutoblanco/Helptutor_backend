@@ -12,14 +12,15 @@ class CertificateViewSet(viewsets.ModelViewSet):
     serializer_class = CertificateSerializer
 
     def destroy(self, request, pk=None):
-        instance = Certificate.objects.get(pk=pk)
+        instance = self.get_object()
         instance.is_active = False
-        id_knowledge_area_tutor = instance.knowledge_area_tutor.id
         self.perform_update(instance)
-        if Certificate.objects.filter(is_active=True, knowledge_area_tutor=id_knowledge_area_tutor).exists() == False:
+        if Certificate.objects.filter(
+            is_active=True, 
+            knowledge_area_tutor=instance.knowledge_area_tutor.id
+        ).exists() == False:
             Service.objects.filter(knowledgeArea_Tutor=id_knowledge_area_tutor).update(is_active=False)
             queryset_list = Service.objects.filter(knowledgeArea_Tutor=id_knowledge_area_tutor)
             for id_k in queryset_list:
-                Aggrement.objects.filter(service=id_k.id).update(is_active=False)
-
+                Aggrement.objects.filter(service=id_k.id).update(is_active=False)        
         return Response(status=status.HTTP_200_OK)

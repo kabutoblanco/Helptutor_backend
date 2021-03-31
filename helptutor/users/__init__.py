@@ -1,1 +1,1 @@
-# default_app_config = 'users_app.apps.UsersAppConfig'
+default_app_config = 'helptutor.users.apps.UsersAppConfig'
