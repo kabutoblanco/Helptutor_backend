@@ -55,9 +55,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'corsheaders',    
+    'drf_yasg',
 ]
 
-
+SWAGGER_SETTINGS = {
+    'DOC_EXPANSION': 'none' 
+}
 
 # REDEFINICIÓN DE LOS TOKENS CON KNOX
 REST_FRAMEWORK = {
