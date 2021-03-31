@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework import routers
 from rest_framework.routers import DefaultRouter
 
-from .api import *
+from helptutor.knowledge_areas.api import *
 
 router = DefaultRouter()
 router.register('knowledgearea', KnowledgeAreaViewSet)

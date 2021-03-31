@@ -51,6 +51,8 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'knox',
     'corsheaders', 
+    'rest_framework_swagger',
+    'drf_yasg'
 ]
 
 LOCAL_APPS = [
@@ -99,11 +101,15 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages',                
             ],
-        },
+        },        
     },
 ]
+
+TEMPLATE_LOADERS = (
+    'django.templates.loaders.eggs.Loader'
+)
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
