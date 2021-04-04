@@ -6,8 +6,8 @@ from rest_framework.routers import DefaultRouter
 from helptutor.services.api import *
 
 router = DefaultRouter()
-# router.register('service', ServiceViewSet)
-# router.register('offer', OfferViewSet)
+router.register('service', ServiceAPIView)
+router.register('offer', OfferAPIView)
 # router.register('contract', ContractViewSet)
 # router.register('aggrement', AggrementViewSet)
 # router.register('nomination', NominationViewSet)

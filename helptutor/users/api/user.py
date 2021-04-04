@@ -1,72 +1,47 @@
-from rest_framework import generics, status, viewsets, permissions
+# rest_framework
+from rest_framework import generics, status, permissions, mixins
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.response import Response
 
-from google.oauth2 import id_token
-from google.auth.transport import requests
-
-from utils.error import ValidationError
-
+# models
 from helptutor.users.models import User, Tutor
-from helptutor.users.serializers import *
-from knox.models import AuthToken
 
-import time
-import threading
+# serializers
+from helptutor.users.serializers import *
+
+# utilities
+from drf_yasg.utils import swagger_auto_schema
+from utils.error import ValidationError
 
 
 class UserAPI(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    serializer_class = UserSerializer
+    serializer_class = UserViewSerializer
 
     def get_object(self):
         return self.request.user
 
 
-class LoginAPI(generics.GenericAPIView):
+class LoginAPI(mixins.CreateModelMixin, generics.GenericAPIView):
     serializer_class = LoginSerializer
 
+    @swagger_auto_schema(
+        responses={status.HTTP_201_CREATED: LoginResponseSerializer}
+    )
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
-        send_email()
-        return Response({
-            "user":
-            UserViewSerializer(user, context=self.get_serializer_context()).data,
-            "token":
-            AuthToken.objects.create(user)[1]
-        })
-
-def send_email():
-    t1 = threading.Thread(target=time_sleep, )
-    t1.start()
-
-def time_sleep():
-    print('llamando')
-    for i in range(30):
-        time.sleep(1)
-        print('hola' + str(i))
+        return super().create(request, args, kwargs)
 
 
-class LoginGoogleAPI(generics.GenericAPIView):
-    serializer_class = LoginSerializer
+class LoginGoogleAPI(mixins.CreateModelMixin, generics.GenericAPIView):
+    """
+    Retrieve a *jambalaya* recipe by name or country of origin
+    """
+    
+    serializer_class = LoginGoogleSerializer
 
+    @swagger_auto_schema(
+        responses={status.HTTP_201_CREATED: LoginResponseSerializer}
+    )
     def post(self, request, *args, **kwargs):
-        token = request.data['id_token']
-        CLIENT_ID = "581408483289-vlrheiceitim0evek4mrjnakqm5v07m7.apps.googleusercontent.com"
-        try:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-            userid = idinfo['sub']
-            user = User.objects.get(email=idinfo['email'])
-        except ValueError:
-            raise ValidationError('Error auth GoogleAPI')
-        except User.DoesNotExist:
-            raise ValidationError('Credenciales incorrectas')
-        return Response({
-            "user":
-            UserViewSerializer(user, context=self.get_serializer_context()).data,
-            "token":
-            AuthToken.objects.create(user)[1]
-        })
+        return super().create(request, args, kwargs)

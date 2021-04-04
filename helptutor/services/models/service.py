@@ -11,10 +11,6 @@ class Service(HelpTutorModel):
     tutor = models.ForeignKey('users.Tutor', on_delete=models.CASCADE, verbose_name='Tutor')
     knowledgeArea_Tutor = models.ForeignKey('knowledge_areas.KnowledgeArea_Tutor', on_delete=models.CASCADE, verbose_name='Area de conocimiento')
 
-    is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
-    date_record = models.DateField(auto_now=True, verbose_name='Fecha de registro')
-    date_update = models.DateField(auto_now=True, verbose_name='Fecha de actualización')
-
     class Meta:
         verbose_name = 'Servicio'
         verbose_name_plural = 'Servicios'

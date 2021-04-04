@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from helptutor.knowledge_areas.models import KnowledgeArea_Tutor
-from .knowledge_area import KnowledgeAreaViewSerializer
+from .knowledge_area import KnowledgeAreaSerializer
 
 
 class KnowledgeArea_TutorSerializer(serializers.ModelSerializer):
@@ -19,7 +19,7 @@ class KnowledgeArea_TutorSerializer(serializers.ModelSerializer):
 
 
 class KnowledgeArea_TutorViewSerializer(serializers.ModelSerializer):
-    knowledge_area = KnowledgeAreaViewSerializer(read_only=True)
+    knowledge_area = KnowledgeArea_TutorSerializer(read_only=True)
 
     class Meta:
         model = KnowledgeArea_Tutor

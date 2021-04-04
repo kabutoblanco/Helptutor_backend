@@ -50,7 +50,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'knox',
-    'corsheaders', 
+    'corsheaders',
     'rest_framework_swagger',
     'drf_yasg'
 ]
@@ -69,7 +69,8 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 SWAGGER_SETTINGS = {
-    'DOC_EXPANSION': 'none'
+    'DOC_EXPANSION': 'none',
+    'exclude_namespaces': ['exclude']
 }
 
 # REDEFINICIÓN DE LOS TOKENS CON KNOX
@@ -105,9 +106,9 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',                
+                'django.contrib.messages.context_processors.messages',
             ],
-        },        
+        },
     },
 ]
 

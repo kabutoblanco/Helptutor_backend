@@ -8,10 +8,3 @@ class KnowledgeAreaSerializer(serializers.ModelSerializer):
     class Meta:
         model = KnowledgeArea
         fields = '__all__'
-
-
-class KnowledgeAreaViewSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = KnowledgeArea
-        fields = '__all__'
