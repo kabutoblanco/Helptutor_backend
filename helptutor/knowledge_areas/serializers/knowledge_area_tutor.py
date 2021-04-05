@@ -12,7 +12,8 @@ class KnowledgeArea_TutorSerializer(serializers.ModelSerializer):
 
     def validate_knowledge_area(self, data):
         """Validated knowledge area isnt record active"""
-        request = KnowledgeArea_Tutor.objects.filter(knowledge_area=data, is_active=True)
+        if not self.context.get('patch', None):
+            request = KnowledgeArea_Tutor.objects.filter(knowledge_area=data, is_active=True)
         if request.exists():
             raise serializers.ValidationError('Ya existe una especilidad registrada')
         return data

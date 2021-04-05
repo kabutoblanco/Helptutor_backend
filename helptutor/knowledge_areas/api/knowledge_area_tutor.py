@@ -35,8 +35,10 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
         return Response(data, status=status.HTTP_201_CREATED)
 
     def partial_update(self, request, pk=None, **kwargs):
+        context = self.get_serializer_context
+        context['action'] = 'patch'
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer = self.get_serializer(instance, data=request.data, context=context, partial=True)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         data = KnowledgeArea_TutorViewSerializer(instance).data
