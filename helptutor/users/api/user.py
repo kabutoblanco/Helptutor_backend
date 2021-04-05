@@ -30,7 +30,9 @@ class LoginAPI(mixins.CreateModelMixin, generics.GenericAPIView):
         responses={status.HTTP_201_CREATED: LoginResponseSerializer}
     )
     def post(self, request, *args, **kwargs):
-        return super().create(request, args, kwargs)
+        response = super().create(request, args, kwargs)
+        print(response)
+        return response
 
 
 class LoginGoogleAPI(mixins.CreateModelMixin, generics.GenericAPIView):

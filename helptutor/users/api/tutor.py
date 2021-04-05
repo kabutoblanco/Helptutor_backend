@@ -150,13 +150,4 @@ class TutorGoogleViewSet(mixins.CreateModelMixin,
     """TutorGoogle view set."""
 
     serializer_class = TutorGoogleCreateSerializer
-
-    @swagger_auto_schema(
-        responses={status.HTTP_201_CREATED: TutorViewSerializer}
-    )
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        tutor = serializer.save()
-        data = TutorViewSerializer(tutor).data
-        return Response(data, status=status.HTTP_200_OK)
+        

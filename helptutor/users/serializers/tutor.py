@@ -82,10 +82,14 @@ class TutorGoogleCreateSerializer(serializers.Serializer):
         instance = dict()
         instance['user'] = user
         instance['token'] = AuthToken.objects.create(user)[1]
-
+        print('serializer')
         print(instance)
 
         return instance
+
+    def to_representation(self, value):
+        value['user'] = UserViewSerializer(value['user']).data
+        return value
 
     def get_information_google(self, data, idinfo, *args, **kwargs):      
         data['email'] = idinfo['email']
