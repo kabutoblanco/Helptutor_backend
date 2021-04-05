@@ -14,4 +14,5 @@ router.register('offer', OfferAPIView)
 
 urlpatterns = [
     path('api/', include(router.urls)),
+    path('api/tutor/services/', TutorServicesAPI.as_view())
 ]
