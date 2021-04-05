@@ -59,10 +59,10 @@ class TutorGoogleCreateSerializer(serializers.Serializer):
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
             user = self.get_information_google(dict(), idinfo)
             tutor = Tutor.objects.filter(user__email=user['email'])
+            self.context['user'] = get_or_create_user(user)
             if tutor.exists():
                 raise ValidationError('Ya existe tutor')
-            return data
-            self.context['user'] = get_or_create_user(user)
+            return data            
         except ValueError:
             raise ValidationError('Error auth GoogleAPI')
         except User.DoesNotExist:
