@@ -7,6 +7,8 @@ from .user import UserCreateSerializer, UserUpdateSerializer, UserViewSerializer
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
+from knox.models import AuthToken
+
 from utils.string import get_random_string
 from utils.error import ValidationError
 
@@ -71,13 +73,19 @@ class TutorGoogleCreateSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         validated_data.pop('token')
-
         validated_data['user'] = self.context['user']
 
         tutor = Tutor.objects.create(**validated_data)
         tutor.save()
 
-        return tutor
+        user = self.context['user']
+        instance = dict()
+        instance['user'] = user
+        instance['token'] = AuthToken.objects.create(user)[1]
+
+        print(instance)
+
+        return instance
 
     def get_information_google(self, data, idinfo, *args, **kwargs):      
         data['email'] = idinfo['email']
