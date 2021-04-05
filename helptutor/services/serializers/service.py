@@ -12,4 +12,4 @@ class ServiceModelSerializer(serializers.ModelSerializer):
 class ServiceCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        exclude = ('tutor', )
+        fields  = '__all__'

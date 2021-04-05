@@ -18,7 +18,8 @@ class ServiceAPIView(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         user = request.user.pk
         tutor = Tutor.objects.get(user=user)
-        request.data['tutor'] = tutor
+        request.data['tutor'] = tutor.pk
+        print(request.data)
         return super().create(request, args, kwargs)
 
     def destroy(self, request, *args, **kwargs):

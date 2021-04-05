@@ -11,5 +11,4 @@ class OfferModelSerializer(serializers.ModelSerializer):
 class OfferCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
-        exclude = ('student',)
-    
+        fields = '__all__'
