@@ -26,24 +26,6 @@ class UserAPI(generics.RetrieveAPIView):
 class LoginAPI(mixins.CreateModelMixin, generics.GenericAPIView):
     serializer_class = LoginSerializer
 
-    @swagger_auto_schema(
-        responses={status.HTTP_201_CREATED: LoginResponseSerializer}
-    )
-    def post(self, request, *args, **kwargs):
-        response = super().create(request, args, kwargs)
-        print(response)
-        return response
-
 
 class LoginGoogleAPI(mixins.CreateModelMixin, generics.GenericAPIView):
-    """
-    Retrieve a *jambalaya* recipe by name or country of origin
-    """
-    
     serializer_class = LoginGoogleSerializer
-
-    @swagger_auto_schema(
-        responses={status.HTTP_201_CREATED: LoginResponseSerializer}
-    )
-    def post(self, request, *args, **kwargs):
-        return super().create(request, args, kwargs)
