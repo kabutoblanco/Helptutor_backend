@@ -19,7 +19,7 @@ class KnowledgeArea_TutorSerializer(serializers.ModelSerializer):
 
 
 class KnowledgeArea_TutorViewSerializer(serializers.ModelSerializer):
-    knowledge_area = KnowledgeArea_TutorSerializer(read_only=True)
+    knowledge_area = KnowledgeAreaSerializer(read_only=True)
 
     class Meta:
         model = KnowledgeArea_Tutor
