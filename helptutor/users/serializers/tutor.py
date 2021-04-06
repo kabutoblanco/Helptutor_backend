@@ -41,6 +41,21 @@ class TutorCreateSerializer(serializers.ModelSerializer):
         data['user'] = get_or_create_user(data['user'])
         return data
 
+    def create(self, validated_data):
+        tutor = Tutor.objects.create(**validated_data)
+        tutor.save()
+
+        user = tutor.user
+        instance = dict()
+        instance['user'] = user
+        instance['token'] = AuthToken.objects.create(user)[1]
+
+        return instance
+
+    def to_representation(self, value):
+        value['user'] = UserViewSerializer(value['user']).data
+        return value
+
 
 class TutorUpdateSerializer(serializers.ModelSerializer):
     user = UserUpdateSerializer(write_only=True)

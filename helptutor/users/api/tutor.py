@@ -53,15 +53,11 @@ class TutorViewSet(mixins.CreateModelMixin,
     @swagger_auto_schema(
         responses={status.HTTP_201_CREATED: TutorViewSerializer}
     )
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         if request.data.get('user', None):
             if request.data['user'].get('email', None):
                 request.data['user']['username'] = request.data['user']['email']
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        tutor = serializer.save()
-        data = TutorViewSerializer(tutor).data
-        return Response(data, status=status.HTTP_201_CREATED)
+        return super().create(request, args, kwargs)
     
     @swagger_auto_schema(
         request_body=TutorUpdateSerializer,
