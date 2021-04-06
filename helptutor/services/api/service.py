@@ -36,5 +36,5 @@ class TutorServicesAPI(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
-        queryset = Service.objects.filter(tutor__user=self.request.user.pk)
+        queryset = Service.objects.filter(tutor__user=self.request.user.pk, is_active=True)
         return queryset
