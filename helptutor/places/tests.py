@@ -61,6 +61,16 @@ class TestApitCountry(APITestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(result["name"],"Ecuador")
 
+    def test_delete_country(self):
+        # definition
+        country = Country.objects.create(name="Mexico",cod="30")
+
+        # process
+        response = self.client.delete(self.url + f"{country.id}/")
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+
 class TestApitEstate(APITestCase):
 
     def setUp(self):
@@ -113,6 +123,13 @@ class TestApitEstate(APITestCase):
         # assert
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(result["name"],"Huila")
+
+    def test_delete_state(self):
+        # process
+        response = self.client.delete(self.url + f"{self.state.id}/")
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
         
 class TestApitCity(APITestCase):
 
@@ -167,6 +184,13 @@ class TestApitCity(APITestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(result["name"],"Mocoa")
 
+    def test_delete_city(self):
+        # process
+        response = self.client.delete(self.url + f"{self.city.id}/")
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+
 class TestApitUniversity(APITestCase):
 
     def setUp(self):
@@ -220,6 +244,13 @@ class TestApitUniversity(APITestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(result["name"],"Univalle")
 
+    def test_delete_university(self):
+        # process
+        response = self.client.delete(self.url + f"{self.university.id}/")
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+        
 class TestApitPlaces(APITestCase):
 
     def setUp(self):
