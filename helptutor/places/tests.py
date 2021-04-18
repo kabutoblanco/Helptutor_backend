@@ -6,7 +6,6 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
 
-from helptutor.places.models import Country
 from helptutor.places.api import *
 
 # Create your tests here.
