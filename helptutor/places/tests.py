@@ -113,7 +113,7 @@ class TestApitEstate(APITestCase):
         # assert
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(result["name"],"Huila")
-
+        
 class TestApitCity(APITestCase):
 
     def setUp(self):
@@ -219,3 +219,49 @@ class TestApitUniversity(APITestCase):
         # assert
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(result["name"],"Univalle")
+
+class TestApitPlaces(APITestCase):
+
+    def setUp(self):
+
+        self.client = APIClient()
+        self.country = mommy.make(Country)
+        self.state = State.objects.create(name="Cauca",cod="10",country=self.country)
+        self.city = City.objects.create(name="Popayan",state=self.state)
+        self.university = University.objects.create(name="Unicauca",city=self.city)
+
+    def test_get_country_state(self):
+
+        # process
+        url = "/api/country/" + f"{self.country.id}" + "/state/"
+        response = self.client.get(url)
+        result = response.json()
+        
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertIsInstance(result,list)
+        self.assertEqual(result[0]["name"],self.state.name)
+
+    def test_get_state_city(self):
+
+        # process
+        url = "/api/state/" + f"{self.state.id}" + "/city/"
+        response = self.client.get(url)
+        result = response.json()
+        
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertIsInstance(result,list)
+        self.assertEqual(result[0]["name"],self.city.name)
+
+    def test_get_city_university(self):
+
+        # process
+        url = "/api/city/" + f"{self.city.id}" + "/university/"
+        response = self.client.get(url)
+        result = response.json()
+        
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertIsInstance(result,list)
+        self.assertEqual(result[0]["name"],self.university.name)
