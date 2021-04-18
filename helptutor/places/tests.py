@@ -86,7 +86,6 @@ class TestApitEstate(APITestCase):
         
         # definition
         country = mommy.make(Country)
-        print()
         data = {
             "name": "Putumayo",
             "cod": "33",
@@ -114,3 +113,56 @@ class TestApitEstate(APITestCase):
         # assert
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(result["name"],"Huila")
+
+class TestApitCity(APITestCase):
+
+    def setUp(self):
+
+        self.client = APIClient()
+
+        self.url = "/api/city/"
+        
+        self.city = mommy.make(City)
+
+    def test_get_city(self):
+
+        # process
+        response = self.client.get(self.url)
+        result = response.json()
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertIsInstance(result,list)
+        self.assertEqual(result[0]["name"],self.city.name)
+
+    def test_post_city(self):
+        
+        # definition
+        city = mommy.make(State)
+        data = {
+            "name": "Orito",
+            "cod": "23",
+            "state": city.id
+        }
+
+        # process
+        response = self.client.post(self.url, data)
+        result = response.json()
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_201_CREATED)
+        self.assertEqual(result["name"],"Orito")
+
+    def test_put_city(self):
+        pk = "1"
+        data = {
+            "name":"Mocoa"
+        }
+
+        # process
+        response = self.client.patch(self.url + f"{pk}/", data=data)
+        result = response.json()
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(result["name"],"Mocoa")
