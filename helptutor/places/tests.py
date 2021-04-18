@@ -166,3 +166,56 @@ class TestApitCity(APITestCase):
         # assert
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(result["name"],"Mocoa")
+
+class TestApitUniversity(APITestCase):
+
+    def setUp(self):
+
+        self.client = APIClient()
+
+        self.url = "/api/university/"
+        
+        self.university = mommy.make(University)
+
+    def test_get_university(self):
+
+        # process
+        response = self.client.get(self.url)
+        result = response.json()
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertIsInstance(result,list)
+        self.assertEqual(result[0]["name"],self.university.name)
+
+    def test_post_university(self):
+        
+        # definition
+        city = mommy.make(City)
+        data = {
+            "name": "Unicauca",
+            "cod": "12",
+            "city": city.id
+        }
+
+        # process
+        response = self.client.post(self.url, data)
+        result = response.json()
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_201_CREATED)
+        self.assertEqual(result["name"],"Unicauca")
+
+    def test_put_university(self):
+        pk = "1"
+        data = {
+            "name":"Univalle"
+        }
+
+        # process
+        response = self.client.patch(self.url + f"{pk}/", data=data)
+        result = response.json()
+
+        # assert
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(result["name"],"Univalle")
