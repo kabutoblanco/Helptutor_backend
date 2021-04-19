@@ -14,5 +14,4 @@ class ContentViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.is_active = False
         self.perform_update(instance)
-        return Response(status=status.HTTP_200_OK)
-
+        return Response(status=status.HTTP_204_NO_CONTENT)

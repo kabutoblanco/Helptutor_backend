@@ -23,4 +23,4 @@ class CertificateViewSet(viewsets.ModelViewSet):
             queryset_list = Service.objects.filter(knowledgeArea_Tutor=id_knowledge_area_tutor)
             for id_k in queryset_list:
                 Aggrement.objects.filter(service=id_k.id).update(is_active=False)        
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
