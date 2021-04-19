@@ -16,12 +16,3 @@ class KnowledgeArea(HelpTutorModel):
 
     def __str__(self):
         return "[{}] {} {}".format(self.id, self.level, self.name)
-
-
-
- 
-
-
-
-
-

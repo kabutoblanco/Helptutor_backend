@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from helptutor.knowledge_areas.models import KnowledgeArea
 from helptutor.knowledge_areas.serializers import KnowledgeAreaSerializer
-
+ 
 
 class KnowledgeAreaViewSet(viewsets.ModelViewSet):
 

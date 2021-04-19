@@ -37,7 +37,6 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, pk=None, **kwargs):
         context = self.get_serializer_context()
         context['action'] = 'patch'
-        print(context)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, context=context, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -52,7 +51,7 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
         Service.objects.filter(knowledgeArea_Tutor=instance.id).update(is_active=False)        
         if KnowledgeArea_Tutor.objects.filter(tutor=instance.tutor, is_active=True).exists() == False:
             Nomination.objects.filter(tutor=instance.tutor).update(is_active=False)
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TutorSpecialitiesAPIList(generics.ListAPIView):

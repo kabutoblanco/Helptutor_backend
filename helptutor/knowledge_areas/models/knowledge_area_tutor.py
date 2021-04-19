@@ -2,7 +2,7 @@ from django.db import models
 
 from utils.models import HelpTutorModel
 
-
+ 
 class KnowledgeArea_Tutor(HelpTutorModel):    
     tags = models.CharField(max_length=120, blank=True, verbose_name="Tags")
     description = models.CharField(max_length=120, blank=True, verbose_name='Descripción')
