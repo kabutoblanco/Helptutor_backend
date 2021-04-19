@@ -1,4 +1,5 @@
 from rest_framework import generics, status, viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from helptutor.users.models import Tutor
 from helptutor.services.models import Offer, Aggrement
@@ -11,6 +12,7 @@ class OfferAPIView(viewsets.ModelViewSet):
 
     serializer_class = OfferCreateSerializer
     queryset = Offer.objects.filter(is_active=True)
+    permission_classes = (IsAuthenticated, )
 
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: OfferModelSerializer}

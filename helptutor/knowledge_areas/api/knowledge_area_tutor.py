@@ -9,12 +9,14 @@ from rest_framework.response import Response
 from helptutor.knowledge_areas.models import KnowledgeArea_Tutor
 from helptutor.users.models import Tutor
 from helptutor.services.models import Service, Nomination
+from helptutor.knowledge_areas.serializers import CertificateSerializer
 
 # serializers
 from helptutor.knowledge_areas.serializers import KnowledgeArea_TutorSerializer, KnowledgeArea_TutorViewSerializer
 
 # utilities
 from utils.error import ValidationError
+import json
 
 
 class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
@@ -24,10 +26,18 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
     queryset = KnowledgeArea_Tutor.objects.filter(is_active=True)
 
     def create(self, request, *args, **kwargs):
+        request.body.decode('utf-8')
+        print(request.data)
+        request.data._mutable = True
         try:
             request.data['tutor'] = Tutor.objects.get(user=request.user.pk).pk
         except Tutor.DoesNotExist:
             raise ValidationError('Tutor no existe')
+        print(request.data['certificate'])
+        serializer = CertificateSerializer(data=request.data['certificate'])
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        request.data._mutable = False
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
