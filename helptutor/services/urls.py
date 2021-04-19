@@ -10,7 +10,7 @@ router.register('service', ServiceAPIView)
 router.register('offer', OfferAPIView)
 # router.register('contract', ContractViewSet)
 # router.register('aggrement', AggrementViewSet)
-# router.register('nomination', NominationViewSet)
+router.register('nomination', NominationAPIView)
 
 urlpatterns = [
     path('api/', include(router.urls)),
