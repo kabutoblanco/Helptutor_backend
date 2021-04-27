@@ -9,7 +9,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 # models
-from helptutor.users.models import User
+from helptutor.users.models import User, Tutor, Moderator, Student
 from knox.models import AuthToken
 
 
@@ -60,6 +60,10 @@ class LoginSerializer(serializers.Serializer):
     def create(self, validated_data):
         instance = dict()
         user = self.context['user']
+        is_tutor = Tutor.objects.filter(user=user).exists()
+        is_moderator = Moderator.objects.filter(user=user).exists()
+        is_student = Student.objects.filter(user=user).exists()
+        instance['roles'] = [is_tutor, is_student, is_moderator] 
         instance['user'] = user
         instance['token'] = AuthToken.objects.create(user)[1]
         return instance

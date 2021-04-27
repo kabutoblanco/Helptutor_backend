@@ -26,18 +26,18 @@ class KnowledgeArea_TutorViewSet(viewsets.ModelViewSet):
     queryset = KnowledgeArea_Tutor.objects.filter(is_active=True)
 
     def create(self, request, *args, **kwargs):
-        request.body.decode('utf-8')
-        print(request.data)
-        request.data._mutable = True
+        # request.body.decode('utf-8')
+        # print(request.data)
+        # request.data._mutable = True
         try:
             request.data['tutor'] = Tutor.objects.get(user=request.user.pk).pk
         except Tutor.DoesNotExist:
             raise ValidationError('Tutor no existe')
-        print(request.data['certificate'])
-        serializer = CertificateSerializer(data=request.data['certificate'])
-        serializer.is_valid(raise_exception=True)
-        instance = serializer.save()
-        request.data._mutable = False
+        # print(request.data['certificate'])
+        # serializer = CertificateSerializer(data=request.data['certificate'])
+        # serializer.is_valid(raise_exception=True)
+        # instance = serializer.save()
+        # request.data._mutable = False
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
