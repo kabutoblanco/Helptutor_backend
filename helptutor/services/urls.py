@@ -14,5 +14,6 @@ router.register('nomination', NominationAPIView)
 
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('api/tutor/services/', TutorServicesAPI.as_view())
+    path('api/tutor/services/', TutorServicesAPI.as_view()),
+    path('api/student/<int:pk>/offer/', StudentOfferAPI.as_view())
 ]

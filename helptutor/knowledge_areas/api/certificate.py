@@ -1,5 +1,6 @@
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from helptutor.knowledge_areas.serializers import CertificateSerializer
 from helptutor.knowledge_areas.models import Certificate
@@ -10,6 +11,7 @@ class CertificateViewSet(viewsets.ModelViewSet):
 
     queryset = Certificate.objects.filter(is_active=True)
     serializer_class = CertificateSerializer
+    permission_classes = (IsAuthenticated, )
 
     def destroy(self, request, pk=None):
         instance = self.get_object()

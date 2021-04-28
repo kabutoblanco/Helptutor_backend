@@ -1,5 +1,6 @@
 from rest_framework import generics, status, viewsets, response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from helptutor.users.models import Student
 from helptutor.services.models import Offer, Aggrement
@@ -29,3 +30,16 @@ class OfferAPIView(viewsets.ModelViewSet):
         self.perform_update(instance)
         Aggrement.objects.filter(student=instance.student).update(is_active=False)
         return response.Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class StudentOfferAPI(generics.ListAPIView):
+
+    serializer_class = OfferModelSerializer
+    queryset = Offer.objects.filter(is_active=True)
+    permission_classes = (IsAuthenticated, )
+
+    def list(self, request, *args, **kwargs):
+        queryset = Offer.objects.filter(student=kwargs['pk'])
+        data = self.get_serializer(queryset, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
