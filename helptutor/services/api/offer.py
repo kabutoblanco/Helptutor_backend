@@ -28,4 +28,4 @@ class OfferAPIView(viewsets.ModelViewSet):
         instance.is_active = False
         self.perform_update(instance)
         Aggrement.objects.filter(student=instance.student).update(is_active=False)
-        return response.Response(status=status.HTTP_200_OK)
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
